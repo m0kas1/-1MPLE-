@@ -22,11 +22,16 @@ class DjangoApiToken:
     token_django: str
 
 @dataclass
+class AdminId:
+    id: str
+
+@dataclass
 class Config:
     tg_bot: TelegramBotConfig
     django_api_base: DjangoApiBase
     django_api_url: DjangoApiUrl
     django_api_token: DjangoApiToken
+    admin_id: AdminId
 
 def load_config() -> Config:
     # Parse a `.env` file and load the variables into environment valriables
@@ -37,4 +42,5 @@ def load_config() -> Config:
         django_api_base=DjangoApiBase(token_api=getenv("API_BASE")),
         django_api_url=DjangoApiUrl(token_url=getenv("API_URL")),
         django_api_token=DjangoApiToken(token_django=getenv("API_TOKEN")),
+        admin_id=AdminId(id=getenv("ADMIN_TG_IDS")),
     )
