@@ -1,42 +1,26 @@
-# ---------------------- Django DRF example ----------------------
-# Этот кусочек — пример на Django + Django REST Framework, чтобы принимать POST.
-# Вставьте его в своё Django-приложение (models.py / serializers.py / views.py).
+import numpy as np
+import scipy.stats
+import time
 
-# models.py
-# from django.db import models
+def TimeByOnePerson(sample, M):
+    n = len(sample)  # длина выборки
+    df = n - 1  # степени свободы
+
+    mean_x = np.mean(sample)  # выборочное среднее
+    sd = np.std(sample, ddof=1)  # стандартное отклонение выборки
+    SE = sd / np.sqrt(n)  # стандартная ошибка генеральной выборки
+    t = (mean_x - M) / SE  # t-статистика
+    p_value = 2 * (1 - scipy.stats.t.cdf(abs(t), df))  # насколько мы уверены в гипотезе H0
+    if p_value >= 0.0002:
+        return M
+    return round(mean_x, 1)
+
+# из бд:
+M = 10  # условное время которое мы берем для определенной активности
+sample = np.round(np.random.uniform(6, 10, size=15), 1)
 #
-# class Purchase(models.Model):
-#     name = models.CharField(max_length=200)
-#     product = models.CharField(max_length=200)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return f"{self.name} — {self.product}"
 
-# serializers.py
-# from rest_framework import serializers
-# from .models import Purchase
-#
-# class PurchaseSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Purchase
-#         fields = ['id', 'name', 'product', 'created_at']
-
-# views.py
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import AllowAny
-# from rest_framework.response import Response
-# from rest_framework import status
-# from .serializers import PurchaseSerializer
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])  # для теста; на проде добавьте аутентификацию
-# def create_purchase(request):
-#     serializer = PurchaseSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# Не забудьте добавить маршрут в urls.py
-# path('api/purchases/', views.create_purchase),
+while True:
+    sample = np.round(np.random.uniform(6, 10, size=7), 1)
+    print(TimeByOnePerson(sample, M), sample)
+    time.sleep(0.2)

@@ -1,8 +1,16 @@
-
 from rest_framework import serializers
-from .models import Purchase
+from .models import Event, QueueEntry, User
 
-class PurchaseSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Purchase
-        fields = ['id', 'name', 'product', 'created_at']
+        model = Event
+        fields = ['id', 'name', 'description']
+
+class QueueEntrySerializer(serializers.ModelSerializer):
+    user_telegram = serializers.IntegerField(source='user.telegram_id', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = QueueEntry
+        fields = ['id', 'event', 'user', 'user_telegram', 'username', 'status', 'created_at', 'called_at', 'served_at']
+        read_only_fields = ['id', 'created_at', 'called_at', 'served_at']
