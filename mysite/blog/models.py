@@ -6,18 +6,14 @@ class User(models.Model):
     full_name = models.CharField(max_length=250, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.username or str(self.telegram_id)
-
-
 class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    avg_service_minutes = models.PositiveIntegerField(default=3)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
-
 
 class QueueEntry(models.Model):
     STATUS_CHOICES = (
@@ -25,7 +21,6 @@ class QueueEntry(models.Model):
         ('called', 'Called'),
         ('cancelled', 'Cancelled'),
         ('served', 'Served'),
-        ('skipped', 'Skipped'),
     )
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='entries')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='queue_entries')
@@ -36,6 +31,3 @@ class QueueEntry(models.Model):
 
     class Meta:
         ordering = ['created_at']
-
-    def __str__(self):
-        return f"{self.user} in {self.event} ({self.status})"
