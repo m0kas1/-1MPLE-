@@ -4,4 +4,6 @@ from aiogram.fsm.state import State, StatesGroup
 # Create your states here.
 class Form(StatesGroup):
     name = State()
-    product = State()
+    choose_event = State()
+    confirm_event = State()
+    waiting = State()

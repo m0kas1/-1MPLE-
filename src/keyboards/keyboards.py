@@ -7,3 +7,11 @@ kb = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+main_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="🎡 Стенды"), KeyboardButton(text="📋 Мои очереди")],
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите действие..."
+)
