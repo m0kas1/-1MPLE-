@@ -6,11 +6,26 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['id', 'name', 'description']
 
-class QueueEntrySerializer(serializers.ModelSerializer):
-    user_telegram = serializers.IntegerField(source='user.telegram_id', read_only=True)
-    username = serializers.CharField(source='user.username', read_only=True)
+# class QueueEntrySerializer(serializers.ModelSerializer):
+#     user_telegram = serializers.IntegerField(source='user.telegram_id', read_only=True)
+#     username = serializers.CharField(source='user.username', read_only=True)
+#
+#     class Meta:
+#         model = QueueEntry
+#         fields = ['id', 'event', 'user', 'user_telegram', 'username', 'status', 'created_at', 'called_at', 'served_at']
+#         read_only_fields = ['id', 'created_at', 'called_at', 'served_at']
 
+# queueapp/serializers.py (добавить)
+from rest_framework import serializers
+from .models import QueueEntry, Event
+
+class ShortEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'name']
+
+class QueueEntryLiteSerializer(serializers.ModelSerializer):
+    event = ShortEventSerializer(read_only=True)
     class Meta:
         model = QueueEntry
-        fields = ['id', 'event', 'user', 'user_telegram', 'username', 'status', 'created_at', 'called_at', 'served_at']
-        read_only_fields = ['id', 'created_at', 'called_at', 'served_at']
+        fields = ['id', 'event', 'status', 'created_at']
